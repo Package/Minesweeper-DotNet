@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Minesweeper.Core
@@ -20,6 +18,9 @@ namespace Minesweeper.Core
 
     public class Cell : Button
     {
+        private readonly Font _defaultFont = new Font("Verdana", 14f, FontStyle.Bold);
+        private readonly Font _smallFont = new Font("Arial", 8f, FontStyle.Bold);
+
         public int XLoc { get; set; }
         public int YLoc { get; set; }
         public int CellSize { get; set; }
@@ -27,7 +28,7 @@ namespace Minesweeper.Core
         public CellType CellType { get; set; }
         public int NumMines { get; set; }
         public Board Board { get; set; }
-
+        public double MinePercentage { get; set; }
 
         /// <summary>
         /// Setup the look and feel for the buttons.
@@ -35,11 +36,17 @@ namespace Minesweeper.Core
         /// </summary>
         public void SetupDesign()
         {
-            //this.BackColor = SystemColors.ButtonFace;
-            this.Location = new Point(XLoc * CellSize, YLoc * CellSize);
+            this.Location = new Point((XLoc * CellSize) + CellSize, (YLoc * CellSize) + CellSize);
             this.Size = new Size(CellSize, CellSize);
             this.UseVisualStyleBackColor = false;
-            this.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
+            this.TextAlign = ContentAlignment.MiddleCenter;
+            this.Font = _defaultFont;
+            
+            // Borders
+            this.BackColor = Color.Silver;
+            this.FlatStyle = FlatStyle.Flat;
+            this.FlatAppearance.BorderColor = Color.Gray;
+            this.FlatAppearance.BorderSize = 1;
         }
 
         /// <summary>
@@ -72,7 +79,7 @@ namespace Minesweeper.Core
                     this.CellType = CellType.Mine;
                     break;
                 default:
-                    throw new Exception(string.Format("Unknown cell type {0}", this.CellType));
+                    throw new Exception($"Unknown cell type {this.CellType}");
             }
 
             this.UpdateDisplay();
@@ -119,7 +126,7 @@ namespace Minesweeper.Core
                 this.UpdateDisplay();
             }
 
-            // Recursivly open neighbor cells.
+            // Recursively open surrounding cells.
             if (this.NumMines == 0)
             {
                 var neighbors = this.GetNeighborCells();
@@ -131,7 +138,6 @@ namespace Minesweeper.Core
         /// <summary>
         /// Get a list of cells that are directly neighboring a provided cell.
         /// </summary>
-        /// <param name="cell"></param>
         /// <returns></returns>
         public List<Cell> GetNeighborCells()
         {
@@ -161,13 +167,14 @@ namespace Minesweeper.Core
         /// </summary>
         public void UpdateDisplay()
         {
+            this.Font = _defaultFont;
+            this.TextAlign = ContentAlignment.MiddleCenter;
+
             // Cell is flagged
             if (this.CellType == CellType.Flagged ||
                 this.CellType == CellType.FlaggedMine)
             {
-                //this.BackColor = SystemColors.ButtonFace;
-                this.BackColor = Color.Gray;
-                this.ForeColor = Color.White;
+                this.ForeColor = Color.Black;
                 this.Text = "?";
                 return;
             }
@@ -175,25 +182,33 @@ namespace Minesweeper.Core
             // Cell is closed
             if (this.CellState == CellState.Closed)
             {
-                this.BackColor = SystemColors.ButtonFace;
+                this.BackColor = Color.DarkGray;
                 this.Text = string.Empty;
-                return;
+
+                if (this.MinePercentage != -1)
+                {
+                    this.ForeColor = Color.Red;
+                    this.Font = _smallFont;
+                    this.Text = $"{this.MinePercentage}%";
+                    this.TextAlign = ContentAlignment.TopLeft;
+                }
+
             }
 
             // Open mine
-            if (this.CellType == CellType.Mine)
+            if (this.CellType == CellType.Mine && (this.CellState == CellState.Opened || Board.ShowMines))
             {
-                this.BackColor = Color.DarkRed;
-                this.ForeColor = Color.White;
+                this.BackColor = Color.DarkGray;
+                this.ForeColor = Color.DarkRed;
                 this.Text = "M";
             }
 
             // Open regular cell (show number of mines around it)
-            if (this.CellType == CellType.Regular)
+            if (this.CellType == CellType.Regular && this.CellState == CellState.Opened)
             {
                 this.BackColor = Color.LightGray;
                 this.ForeColor = this.GetCellColour();
-                this.Text = this.NumMines > 0 ? string.Format("{0}", this.NumMines) : string.Empty;
+                this.Text = this.NumMines > 0 ? $"{this.NumMines}" : string.Empty;
             }
         }
 
@@ -224,6 +239,54 @@ namespace Minesweeper.Core
                 default:
                     return ColorTranslator.FromHtml("0xffffff");
             }
+        }
+
+        /// <summary>
+        /// Work out the percentage % of this cell being a mine.
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateMinePercentage()
+        {
+            double pct = 0d;
+            int checkedCells = 0;
+
+            foreach (var nc in GetNeighborCells())
+            {
+                int surroundingMines = nc.NumMines;
+
+                if (surroundingMines < 1)
+                    continue;
+
+                if (nc.CellState == CellState.Closed)
+                    continue;
+
+                int availCells = nc.GetNeighborCells().Where(ncc =>
+                    ncc.CellState == CellState.Closed &&
+                    ncc.CellType != CellType.Flagged &&
+                    ncc.CellType != CellType.FlaggedMine).ToList().Count;
+
+                int flaggedCells = nc.GetNeighborCells().Where(ncc =>
+                    ncc.CellType == CellType.Flagged || ncc.CellType == CellType.FlaggedMine).ToList().Count;
+
+                // 0% chance of being a mine
+                if (flaggedCells == surroundingMines)
+                    return 0;
+
+                // 100% of being a mine
+                if (surroundingMines == (availCells + flaggedCells))
+                    return 100;
+
+                checkedCells += 1;
+                pct += (surroundingMines * 1.0 / availCells) * 100;
+            }
+
+            // Unable to determine - did not consider any cells.
+            if (checkedCells == 0)
+            {
+                return -1;
+            }
+
+            return Math.Round(pct / (checkedCells > 0 ? checkedCells : 1));
         }
     }
 }

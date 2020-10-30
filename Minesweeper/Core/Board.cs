@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Minesweeper.Core
@@ -14,6 +11,7 @@ namespace Minesweeper.Core
         public int Height { get; set; }
         public int NumMines { get; set; }
         public Cell[,] Cells { get; set; }
+        public bool ShowMines { get; set; }
 
         public Board(Minesweeper minesweeper, int width, int height, int mines)
         {
@@ -39,7 +37,8 @@ namespace Minesweeper.Core
                         YLoc = y - 1,
                         CellState = CellState.Closed,
                         CellType = CellType.Regular,
-                        CellSize = 50,
+                        CellSize = 35,
+                        MinePercentage = -1,
                         Board = this
                     };
                     c.SetupDesign();
@@ -87,10 +86,6 @@ namespace Minesweeper.Core
         {
             var cell = (Cell) sender;
 
-            // Cell is already opened
-            if (cell.CellState == CellState.Opened)
-                return;
-
             switch (e.Button)
             {
                 // Left mouse button opens the cell
@@ -100,13 +95,17 @@ namespace Minesweeper.Core
 
                 // Right mouse button flags the cell
                 case MouseButtons.Right:
-                    cell.OnFlag();
+                    if (cell.CellState == CellState.Closed)
+                    {
+                        cell.OnFlag();
+                    }
                     break;
 
                 default:
-                    return;
+                    break;
             }
 
+            SetMinePercentages();
             CheckForWin();
         }
 
@@ -150,6 +149,19 @@ namespace Minesweeper.Core
             // Start the new game
             this.SetupBoard();
             this.PlaceMines();
+        }
+
+        public void SetMinePercentages(bool reset = false)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    var cc = this.Cells[x, y];
+                    cc.MinePercentage = reset ? -1 : cc.CalculateMinePercentage();
+                    cc.UpdateDisplay();
+                }
+            }
         }
     }
 }
