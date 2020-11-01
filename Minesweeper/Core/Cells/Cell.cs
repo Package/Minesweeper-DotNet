@@ -6,16 +6,6 @@ using System.Windows.Forms;
 
 namespace Minesweeper.Core
 {
-    public enum CellType
-    {
-        Regular, Mine, Flagged, FlaggedMine
-    }
-
-    public enum CellState
-    {
-        Opened, Closed
-    }
-
     public class Cell : Button
     {
         private readonly Font _defaultFont = new Font("Verdana", 14f, FontStyle.Bold);
