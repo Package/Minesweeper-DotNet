@@ -20,7 +20,7 @@ namespace Minesweeper.Core
         public CellType CellType { get; set; }
         public int NumMines { get; set; }
         public Board Board { get; set; }
-        public double MinePercentage { get; set; }
+        public decimal MinePercentage { get; set; }
         public Rectangle Bounds { get; private set; }
         private List<Cell> Surrounding { get; set; }
         public bool Flagged => CellType == CellType.Flagged || CellType == CellType.FlaggedMine;
@@ -153,26 +153,38 @@ namespace Minesweeper.Core
         /// <returns></returns>
         public void CalculateMinePercentage()
         {
-            double pct = 0d;
-            int checkedCells = 0;
+            if (Flagged)
+            {
+                MinePercentage = 100;
+                return;
+            }
+
+            if (Opened)
+            {
+                MinePercentage = 0;
+                return;
+            }
+
+            var percent = 0M;
+            var checkedCells = 0;
 
             foreach (var nc in GetNeighborCells())
             {
-                int surroundingMines = nc.NumMines;
+                var surroundingMines = nc.NumMines;
 
                 if (surroundingMines < 1)
+                {
                     continue;
+                }
 
                 if (nc.CellState == CellState.Closed)
+                {
                     continue;
+                }
 
-                int availCells = nc.GetNeighborCells().Where(ncc =>
-                    ncc.CellState == CellState.Closed &&
-                    ncc.CellType != CellType.Flagged &&
-                    ncc.CellType != CellType.FlaggedMine).ToList().Count;
-
-                int flaggedCells = nc.GetNeighborCells().Where(ncc =>
-                    ncc.CellType == CellType.Flagged || ncc.CellType == CellType.FlaggedMine).ToList().Count;
+                var availCells = nc.GetNeighborCells().Where(ncc => ncc.Closed && !ncc.Flagged).ToList().Count;
+                var flaggedCells = nc.GetNeighborCells().Where(ncc =>ncc.Flagged).ToList().Count;
+                var leftToFind = surroundingMines - flaggedCells;
 
                 // 0% chance of being a mine
                 if (flaggedCells == surroundingMines)
@@ -189,7 +201,7 @@ namespace Minesweeper.Core
                 }
 
                 checkedCells += 1;
-                pct += (surroundingMines * 1.0 / availCells) * 100;
+                percent += (leftToFind * 1.0M / availCells) * 100;
             }
 
             // Unable to determine - did not consider any cells.
@@ -199,7 +211,7 @@ namespace Minesweeper.Core
                 return;
             }
 
-            MinePercentage = Math.Round(pct / (checkedCells > 0 ? checkedCells : 1));
+            MinePercentage = Math.Round(percent / (checkedCells > 0 ? checkedCells : 1));
         }
     }
 }

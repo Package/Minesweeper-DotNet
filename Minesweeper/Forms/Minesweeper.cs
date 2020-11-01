@@ -102,17 +102,22 @@ namespace Minesweeper
                 return;
             }
 
+            Cell cell = _board.Cells[cellX, cellY];
+
             switch (mouseArgs.Button)
             {
                 case MouseButtons.Left:
                     // Left click opens the cell:
-                    _board.Cells[cellX, cellY].OnClick();
+                    cell.OnClick();
                     AfterClick();
                     break;
                 case MouseButtons.Right:
                     // Right click places a flag:
-                    _board.Cells[cellX, cellY].OnFlag();
-                    AfterClick();
+                    if (cell.Closed)
+                    {
+                        cell.OnFlag();
+                        AfterClick();
+                    }
                     break;
                 default: 
                     break;

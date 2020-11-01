@@ -189,7 +189,7 @@ namespace Minesweeper.Core
                 {
                     var cell = Cells[x, y];
                     DrawInsideCell(cell, graphics);
-                    graphics.DrawRectangle(Pens.Gray, cell.Bounds);
+                    graphics.DrawRectangle(Pens.DimGray, cell.Bounds);
                 }
             }
         }
@@ -205,9 +205,19 @@ namespace Minesweeper.Core
             if (cell.Closed)
             {
                 graphics.FillRectangle(Brushes.DarkGray, cell.Bounds);
+
                 if (cell.MinePercentage != -1 && ShowPercentage)
                 {
-                    graphics.DrawString($"{cell.MinePercentage:#.##}%", _percentFont, Brushes.DarkRed, cell.TopLeftPos);
+                    graphics.DrawString($"{cell.MinePercentage.ToString()}%", _percentFont, Brushes.DarkRed, cell.TopLeftPos);
+
+                    if (cell.MinePercentage == 0M)
+                    {
+                        graphics.FillRectangle(Brushes.PaleGreen, cell.Bounds);
+                    }
+                    if (cell.MinePercentage == 100M)
+                    {
+                        graphics.FillRectangle(Brushes.Salmon, cell.Bounds);
+                    }
                 }
             }
 
@@ -236,7 +246,11 @@ namespace Minesweeper.Core
                     graphics.FillRectangle(Brushes.Red, cell.Bounds);
                 }
 
-                graphics.DrawString("M", _textFont, Brushes.DarkRed, cell.CenterPos);
+                // Reveal the locations of the mines that had not been flagged
+                if (!cell.Flagged)
+                {
+                    graphics.DrawString("M", _textFont, Brushes.DarkRed, cell.CenterPos);
+                }
             }
 
             // Draw (x,y) location
