@@ -1,4 +1,5 @@
 ﻿using Minesweeper.Core;
+using Minesweeper.Core.Boards;
 using System;
 using System.Windows.Forms;
 
@@ -88,6 +89,12 @@ namespace Minesweeper
         /// <param name="e"></param>
         private void Minesweeper_Click(object sender, EventArgs e)
         {
+            // Game is in an over state - do not register clicks on the board.
+            if (_board != null && _board.GameOver)
+            {
+                return;
+            }
+
             var mouseArgs = (MouseEventArgs)e;
 
             var clickedX = mouseArgs.X - Board.CellSize;
@@ -147,7 +154,7 @@ namespace Minesweeper
         {
             if (_board != null)
             {
-                _board.Paint(e.Graphics);
+                _board.Painter?.Paint(e.Graphics);
             }
         }
     }

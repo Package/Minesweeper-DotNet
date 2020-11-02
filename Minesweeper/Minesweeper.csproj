@@ -48,7 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Board.cs" />
+    <Compile Include="Core\Boards\Board.cs" />
+    <Compile Include="Core\Boards\BoardPainter.cs" />
     <Compile Include="Core\Cells\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -88,6 +89,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
