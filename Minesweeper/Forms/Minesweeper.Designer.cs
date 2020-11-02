@@ -28,29 +28,108 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnSolve = new System.Windows.Forms.Button();
-            this.btnShowPercent = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hintsAndTipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPercentagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showCellLocationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.beginnerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.intermediateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.expertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnSolve
+            // menuStrip1
             // 
-            this.btnSolve.Location = new System.Drawing.Point(705, 585);
-            this.btnSolve.Name = "btnSolve";
-            this.btnSolve.Size = new System.Drawing.Size(75, 23);
-            this.btnSolve.TabIndex = 0;
-            this.btnSolve.Text = "Show Mines";
-            this.btnSolve.UseVisualStyleBackColor = true;
-            this.btnSolve.Click += new System.EventHandler(this.btnShowMines_Click);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.newGameToolStripMenuItem,
+            this.hintsAndTipsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(792, 24);
+            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // btnShowPercent
+            // fileToolStripMenuItem
             // 
-            this.btnShowPercent.Location = new System.Drawing.Point(705, 556);
-            this.btnShowPercent.Name = "btnShowPercent";
-            this.btnShowPercent.Size = new System.Drawing.Size(75, 23);
-            this.btnShowPercent.TabIndex = 1;
-            this.btnShowPercent.Text = "Show %";
-            this.btnShowPercent.UseVisualStyleBackColor = true;
-            this.btnShowPercent.Click += new System.EventHandler(this.btnShowPercent_Click);
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.quitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // quitToolStripMenuItem
+            // 
+            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            // 
+            // hintsAndTipsToolStripMenuItem
+            // 
+            this.hintsAndTipsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showMinesToolStripMenuItem,
+            this.showPercentagesToolStripMenuItem,
+            this.showCellLocationsToolStripMenuItem});
+            this.hintsAndTipsToolStripMenuItem.Name = "hintsAndTipsToolStripMenuItem";
+            this.hintsAndTipsToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
+            this.hintsAndTipsToolStripMenuItem.Text = "Hints and Tips";
+            // 
+            // showMinesToolStripMenuItem
+            // 
+            this.showMinesToolStripMenuItem.Name = "showMinesToolStripMenuItem";
+            this.showMinesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showMinesToolStripMenuItem.Text = "Show Mines";
+            this.showMinesToolStripMenuItem.Click += new System.EventHandler(this.showMinesToolStripMenuItem_Click);
+            // 
+            // showPercentagesToolStripMenuItem
+            // 
+            this.showPercentagesToolStripMenuItem.Name = "showPercentagesToolStripMenuItem";
+            this.showPercentagesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showPercentagesToolStripMenuItem.Text = "Show Percentages %";
+            this.showPercentagesToolStripMenuItem.Click += new System.EventHandler(this.showPercentagesToolStripMenuItem_Click);
+            // 
+            // showCellLocationsToolStripMenuItem
+            // 
+            this.showCellLocationsToolStripMenuItem.Name = "showCellLocationsToolStripMenuItem";
+            this.showCellLocationsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showCellLocationsToolStripMenuItem.Text = "Show Cell Locations";
+            this.showCellLocationsToolStripMenuItem.Click += new System.EventHandler(this.showCellLocationsToolStripMenuItem_Click);
+            // 
+            // newGameToolStripMenuItem
+            // 
+            this.newGameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.beginnerToolStripMenuItem,
+            this.intermediateToolStripMenuItem,
+            this.expertToolStripMenuItem});
+            this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.newGameToolStripMenuItem.Text = "New Game";
+            // 
+            // beginnerToolStripMenuItem
+            // 
+            this.beginnerToolStripMenuItem.Name = "beginnerToolStripMenuItem";
+            this.beginnerToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.beginnerToolStripMenuItem.Text = "Beginner (8x8 - 10 mines)";
+            this.beginnerToolStripMenuItem.Click += new System.EventHandler(this.beginnerToolStripMenuItem_Click);
+            // 
+            // intermediateToolStripMenuItem
+            // 
+            this.intermediateToolStripMenuItem.Name = "intermediateToolStripMenuItem";
+            this.intermediateToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.intermediateToolStripMenuItem.Text = "Intermediate (16x16 - 40 mines)";
+            this.intermediateToolStripMenuItem.Click += new System.EventHandler(this.intermediateToolStripMenuItem_Click);
+            // 
+            // expertToolStripMenuItem
+            // 
+            this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
+            this.expertToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.expertToolStripMenuItem.Text = "Expert (30x16 - 99 mines)";
+            this.expertToolStripMenuItem.Click += new System.EventHandler(this.expertToolStripMenuItem_Click);
             // 
             // Minesweeper
             // 
@@ -58,20 +137,31 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(792, 620);
-            this.Controls.Add(this.btnShowPercent);
-            this.Controls.Add(this.btnSolve);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Minesweeper";
             this.Text = "Minesweeper";
             this.Click += new System.EventHandler(this.Minesweeper_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Minesweeper_Paint);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnSolve;
-        private System.Windows.Forms.Button btnShowPercent;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hintsAndTipsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showMinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showPercentagesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showCellLocationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newGameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem beginnerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem intermediateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
     }
 }
 

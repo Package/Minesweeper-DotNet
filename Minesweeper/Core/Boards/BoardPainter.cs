@@ -7,8 +7,7 @@ namespace Minesweeper.Core.Boards
     {
         public Board Board { get; set; }
 
-        public Dictionary<int, SolidBrush> _cellColours { get; set; }
-
+        private Dictionary<int, SolidBrush> _cellColours;
         private readonly Font _textFont = new Font(FontFamily.GenericSansSerif, 16f);
         private readonly Font _percentFont = new Font(FontFamily.GenericSansSerif, 7f);
         private readonly Font _locationFont = new Font(FontFamily.GenericSansSerif, 6f);
@@ -46,7 +45,7 @@ namespace Minesweeper.Core.Boards
         public void Paint(Graphics graphics)
         {
             graphics.Clear(Color.White);
-            graphics.TranslateTransform(Board.CellSize, Board.CellSize);
+            graphics.TranslateTransform(Board.CellSize / 2, Board.CellSize);
 
             for (int x = 0; x < Board.Width; x++)
             {

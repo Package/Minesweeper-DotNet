@@ -11,6 +11,7 @@ namespace Minesweeper.Core.Boards
         public int Width { get; set; }
         public int Height { get; set; }
         public int NumMines { get; set; }
+        public int NumMinesRemaining => NumMines - FlagsPlaced();
         public Cell[,] Cells { get; set; }
         public bool ShowMines { get; set; }
         public bool ShowPercentage { get; set; }
@@ -114,6 +115,28 @@ namespace Minesweeper.Core.Boards
                 SetupBoard();
                 PlaceMines();
             }
+        }
+
+        /// <summary>
+        /// Returns the number of flags that have been placed.
+        /// </summary>
+        /// <returns></returns>
+        public int FlagsPlaced()
+        {
+            int totalFlagged = 0;
+
+            for (var x = 0; x < Width; x++)
+            {
+                for (var y = 0; y < Height; y++)
+                {
+                    if (Cells[x, y].Flagged)
+                    {
+                        totalFlagged++;
+                    }
+                }
+            }
+
+            return totalFlagged;
         }
 
         /// <summary>
