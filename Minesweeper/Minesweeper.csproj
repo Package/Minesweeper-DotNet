@@ -49,18 +49,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Board.cs" />
-    <Compile Include="Core\Cell.cs">
+    <Compile Include="Core\Cells\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Minesweeper.cs">
+    <Compile Include="Core\Cells\CellState.cs" />
+    <Compile Include="Core\Cells\CellType.cs" />
+    <Compile Include="Core\GameMode.cs" />
+    <Compile Include="Forms\Minesweeper.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Minesweeper.Designer.cs">
+    <Compile Include="Forms\Minesweeper.Designer.cs">
       <DependentUpon>Minesweeper.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Minesweeper.resx">
+    <EmbeddedResource Include="Forms\Minesweeper.resx">
       <DependentUpon>Minesweeper.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

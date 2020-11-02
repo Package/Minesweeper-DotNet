@@ -62,6 +62,8 @@
             this.Controls.Add(this.btnSolve);
             this.Name = "Minesweeper";
             this.Text = "Minesweeper";
+            this.Click += new System.EventHandler(this.Minesweeper_Click);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Minesweeper_Paint);
             this.ResumeLayout(false);
 
         }
