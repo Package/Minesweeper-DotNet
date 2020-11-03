@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Minesweeper.Core.Boards;
+using Minesweeper.Core.Cells;
 
 namespace Minesweeper.Core
 {
@@ -21,12 +22,33 @@ namespace Minesweeper.Core
         public int NumMines { get; set; }
         public Board Board { get; set; }
         public decimal MinePercentage { get; set; }
+        public decimal ConstraintPercentage { get; set; }
         public Rectangle Bounds { get; private set; }
         private List<Cell> Surrounding { get; set; }
+        public CellConstraint Constraint { get; private set; }
+        /// <summary>
+        /// Which cells around this cell have been flagged already?
+        /// </summary>
+        public List<Cell> SurroundingFlagged => GetNeighborCells().Where(cell => cell.Flagged).ToList();
+
+        /// <summary>
+        /// How many mines has this cell still got around it to be identified?
+        /// </summary>
+        public int MinesRemaining => Opened && NumMines > 0 ? (NumMines - SurroundingFlagged.Count) : 0;
+
+        /// <summary>
+        /// Has this cell been marked as a mine?
+        /// </summary>
         public bool Flagged => CellType == CellType.Flagged || CellType == CellType.FlaggedMine;
 
+        /// <summary>
+        /// Is this cell still closed?
+        /// </summary>
         public bool Closed => CellState == CellState.Closed;
 
+        /// <summary>
+        /// Has this cell been opened?
+        /// </summary>
         public bool Opened => CellState == CellState.Opened;
 
         /// <summary>
@@ -46,6 +68,7 @@ namespace Minesweeper.Core
             CellState = CellState.Closed;
             CellType = CellType.Regular;
             MinePercentage = -1;
+            ConstraintPercentage = -1;
             Bounds = new Rectangle(XLoc * CellSize, YLoc * CellSize, CellSize, CellSize);
             Board = board;
             XPos = XLoc * CellSize;
@@ -53,6 +76,7 @@ namespace Minesweeper.Core
             CenterPos = new Point(XPos + (CellSize / 2 - 10), YPos + (CellSize / 2 - 10));
             TopLeftPos = new Point(XPos, YPos);
             BottomLeftPos = new Point(XPos, YPos + (CellSize - 10));
+            Constraint = new CellConstraint { Cell = this };
         }
 
         /// <summary>
@@ -60,23 +84,14 @@ namespace Minesweeper.Core
         /// </summary>
         public void OnFlag()
         {
-            switch (CellType)
+            CellType = CellType switch
             {
-                case CellType.Regular:
-                    this.CellType = CellType.Flagged;
-                    break;
-                case CellType.Mine:
-                    this.CellType = CellType.FlaggedMine;
-                    break;
-                case CellType.Flagged:
-                    this.CellType = CellType.Regular;
-                    break;
-                case CellType.FlaggedMine:
-                    this.CellType = CellType.Mine;
-                    break;
-                default:
-                    throw new Exception($"Unknown cell type {this.CellType}");
-            }
+                CellType.Regular => CellType.Flagged,
+                CellType.Mine => CellType.FlaggedMine,
+                CellType.Flagged => CellType.Regular,
+                CellType.FlaggedMine => CellType.Mine,
+                _ => throw new Exception($"Unknown cell type: {CellType}"),
+            };
 
             Board.Minesweeper.Invalidate();
         }
@@ -108,7 +123,7 @@ namespace Minesweeper.Core
             }
 
             // Recursively open surrounding cells.
-            if (NumMines == 0)
+            if (NumMines == 0 || MinesRemaining == 0)
             {
                 foreach (var n in GetNeighborCells())
                 {
@@ -153,15 +168,23 @@ namespace Minesweeper.Core
         /// <returns></returns>
         public void CalculateMinePercentage()
         {
+            // Cell has been flagged, we can assume this is always going to be a mine.
             if (Flagged)
             {
                 MinePercentage = 100;
                 return;
             }
 
+            // Cell has been opened, this therefore can never be a mine.
             if (Opened)
             {
                 MinePercentage = 0;
+                return;
+            }
+
+            // Percentage has already been hard-set so there's no need to re-calculate.
+            if (MinePercentage == 0M || MinePercentage == 100M)
+            {
                 return;
             }
 
@@ -212,6 +235,92 @@ namespace Minesweeper.Core
             }
 
             MinePercentage = Math.Round(percent / (checkedCells > 0 ? checkedCells : 1));
+        }
+
+        /// <summary>
+        /// Updates this cells constraints.
+        /// </summary>
+        public void UpdateConstraints()
+        {
+            // Clear existing:
+            Constraint.Constraints.Clear();
+            Constraint.NumMines = 0;
+
+            // Cell has already been solved or not even opened yet.
+            if (MinesRemaining == 0 || Closed || Flagged)
+            {
+                return;
+            }
+
+            // Re-calculate:
+            foreach (var cell in GetNeighborCells())
+            {
+                // Opened/already flagged/already resolved are of no use:
+                if (cell.Closed && !cell.Flagged)
+                {
+                    Constraint.Constraints.Add(cell);
+                }
+            }
+
+            Constraint.NumMines = MinesRemaining;
+        }
+
+        /// <summary>
+        /// Attempt to resolve the constraints of this cell to identify other than obvious locations
+        /// where the mines/clear cells are located.
+        /// </summary>
+        public void ResolveConstraints()
+        {
+            var safe = new HashSet<Cell>();
+            var mines = new HashSet<Cell>();
+
+            foreach (var cell in GetNeighborCells())
+            {
+                var currentSet = cell.Constraint.Constraints;
+                var masterSet = Constraint.Constraints;
+
+                // If this is a subset of constrains the the differences in the sets are mines.
+                if (currentSet.IsSubsetOf(masterSet))
+                {
+                    // Cells that are different in the set
+                    var difference = masterSet.Except(currentSet).ToList();
+
+                    // Providing that the subset can fully satisfy the superset
+                    if (cell.Constraint.NumMines == Constraint.NumMines)
+                    {
+                        // Subsets constraints satisfy the superset. Any cells difference cannot be mines.
+                        foreach (var cs in difference)
+                        {
+                            safe.Add(cs);
+                        }
+                    }
+
+                    // Number of mines remaining here does not fully satisfy, (some or all) of the difference cells will be mines.
+                    if (cell.Constraint.NumMines < Constraint.NumMines)
+                    {
+                        // Cells difference must all be mines to satisfy the master set after considering the subset.
+                        if (difference.Count + cell.Constraint.NumMines == Constraint.NumMines)
+                        {
+                            foreach (var cs in difference)
+                            {
+                                mines.Add(cs);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Mark any cells identified as safe as never containing a mine:
+            foreach (var cell in safe)
+            {
+                cell.MinePercentage = 0M;
+            }
+
+            // Mark any cells identified as mines as 100% being a mine:
+            foreach (var cell in mines)
+            {
+                cell.MinePercentage = 100M;
+            }
         }
     }
 }

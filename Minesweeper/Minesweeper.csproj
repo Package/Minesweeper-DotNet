@@ -53,6 +53,7 @@
     <Compile Include="Core\Cells\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core\Cells\CellConstraint.cs" />
     <Compile Include="Core\Cells\CellState.cs" />
     <Compile Include="Core\Cells\CellType.cs" />
     <Compile Include="Core\GameMode.cs" />

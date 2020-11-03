@@ -21,7 +21,7 @@ namespace Minesweeper
 
             _random = new Random();
 
-            _mode = GameMode.Expert;
+            _mode = GameMode.Intermediate;
             StartGame();
         }
 
@@ -73,20 +73,13 @@ namespace Minesweeper
             }
         }
 
-        /// <summary>
-        /// Handles click events on the form for opening/flagging cells.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Minesweeper_Click(object sender, EventArgs e)
+        private Cell GetCellFromMouseEvent(MouseEventArgs mouseArgs)
         {
             // Game is in an over state - do not register clicks on the board.
             if (_board != null && _board.GameOver)
             {
-                return;
+                return null;
             }
-
-            var mouseArgs = (MouseEventArgs)e;
 
             var clickedX = mouseArgs.X - (Board.CellSize / 2);
             var clickedY = mouseArgs.Y - Board.CellSize;
@@ -97,10 +90,24 @@ namespace Minesweeper
             // Check for out of bounds:
             if (clickedX < 0 || clickedY < 0 || cellX < 0 || cellY < 0 || cellX >= _board.Width || cellY >= _board.Height)
             {
-                return;
+                return null;
             }
 
-            Cell cell = _board.Cells[cellX, cellY];
+            return _board.Cells[cellX, cellY];
+        }
+
+        /// <summary>
+        /// Handles click events on the form for opening/flagging cells.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Minesweeper_Click(object sender, EventArgs e)
+        {
+            var mouseArgs = (MouseEventArgs)e;
+
+            var cell = GetCellFromMouseEvent(mouseArgs);
+            if (cell == null)
+                return;
 
             switch (mouseArgs.Button)
             {
@@ -127,12 +134,9 @@ namespace Minesweeper
         /// </summary>
         private void AfterClick()
         {
-            if (_board.ShowPercentage)
-            {
-                _board.SetMinePercentages();
-            }
-
+            _board.UpdateCells();
             _board.CheckForWin();
+
             Invalidate();
         }
 
@@ -184,7 +188,7 @@ namespace Minesweeper
         private void showPercentagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _board.ShowPercentage = !_board.ShowPercentage;
-            _board.SetMinePercentages();
+            _board.UpdateCells();
             showPercentagesToolStripMenuItem.Checked = _board.ShowPercentage;
 
             Invalidate();
@@ -210,11 +214,7 @@ namespace Minesweeper
         /// <param name="e"></param>
         private void beginnerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ConfirmNewGame())
-            {
-                _mode = GameMode.Beginner;
-                StartGame();
-            }
+            ConfirmNewGame(GameMode.Beginner);
         }
 
         /// <summary>
@@ -224,11 +224,7 @@ namespace Minesweeper
         /// <param name="e"></param>
         private void intermediateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ConfirmNewGame())
-            {
-                _mode = GameMode.Intermediate;
-                StartGame();
-            }
+            ConfirmNewGame(GameMode.Intermediate);
         }
 
         /// <summary>
@@ -238,22 +234,41 @@ namespace Minesweeper
         /// <param name="e"></param>
         private void expertToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ConfirmNewGame())
-            {
-                _mode = GameMode.Expert;
-                StartGame();
-            }
+            ConfirmNewGame(GameMode.Expert);
         }
 
         /// <summary>
         /// Confirms that the user wants to start a new game.
         /// </summary>
         /// <returns></returns>
-        private bool ConfirmNewGame()
+        private void ConfirmNewGame(GameMode mode)
         {
             var response = MessageBox.Show("Do you really want to start a new game?\nYou will lose any progress in your current game.", "Start New Game", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            return response == DialogResult.Yes;
+            if (response == DialogResult.Yes)
+            {
+                _mode = mode;
+                StartGame();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for when the mouse is moved.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Minesweeper_MouseMove(object sender, MouseEventArgs e)
+        {
+            var cell = GetCellFromMouseEvent(e);
+            _board.Painter.HoveredCell = cell;
+            Cursor = cell != null && cell.Closed ? Cursors.Hand : Cursors.Default;
+
+            if (cell != null)
+            {
+                _board.UpdateCells();
+            }
+
+            Invalidate();
         }
     }
 }

@@ -171,14 +171,17 @@ namespace Minesweeper.Core.Boards
         }
 
         /// <summary>
-        /// Calculates the percentage of each cell on the board being a mine.
+        /// Updates each of the cells at the end of a turn.
+        /// Handles calculation of the cells constraints and the percentage of each cell on the board being a mine.
         /// </summary>
-        public void SetMinePercentages()
+        public void UpdateCells()
         {
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
+                    Cells[x, y].UpdateConstraints();
+                    Cells[x, y].ResolveConstraints();
                     Cells[x, y].CalculateMinePercentage();
                 }
             }

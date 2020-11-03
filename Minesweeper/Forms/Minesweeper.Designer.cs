@@ -31,14 +31,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hintsAndTipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showMinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showPercentagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showCellLocationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.beginnerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.intermediateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hintsAndTipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPercentagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showCellLocationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,40 +65,9 @@
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(97, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
-            // 
-            // hintsAndTipsToolStripMenuItem
-            // 
-            this.hintsAndTipsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showMinesToolStripMenuItem,
-            this.showPercentagesToolStripMenuItem,
-            this.showCellLocationsToolStripMenuItem});
-            this.hintsAndTipsToolStripMenuItem.Name = "hintsAndTipsToolStripMenuItem";
-            this.hintsAndTipsToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
-            this.hintsAndTipsToolStripMenuItem.Text = "Hints and Tips";
-            // 
-            // showMinesToolStripMenuItem
-            // 
-            this.showMinesToolStripMenuItem.Name = "showMinesToolStripMenuItem";
-            this.showMinesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.showMinesToolStripMenuItem.Text = "Show Mines";
-            this.showMinesToolStripMenuItem.Click += new System.EventHandler(this.showMinesToolStripMenuItem_Click);
-            // 
-            // showPercentagesToolStripMenuItem
-            // 
-            this.showPercentagesToolStripMenuItem.Name = "showPercentagesToolStripMenuItem";
-            this.showPercentagesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.showPercentagesToolStripMenuItem.Text = "Show Percentages %";
-            this.showPercentagesToolStripMenuItem.Click += new System.EventHandler(this.showPercentagesToolStripMenuItem_Click);
-            // 
-            // showCellLocationsToolStripMenuItem
-            // 
-            this.showCellLocationsToolStripMenuItem.Name = "showCellLocationsToolStripMenuItem";
-            this.showCellLocationsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.showCellLocationsToolStripMenuItem.Text = "Show Cell Locations";
-            this.showCellLocationsToolStripMenuItem.Click += new System.EventHandler(this.showCellLocationsToolStripMenuItem_Click);
             // 
             // newGameToolStripMenuItem
             // 
@@ -131,6 +100,37 @@
             this.expertToolStripMenuItem.Text = "Expert (30x16 - 99 mines)";
             this.expertToolStripMenuItem.Click += new System.EventHandler(this.expertToolStripMenuItem_Click);
             // 
+            // hintsAndTipsToolStripMenuItem
+            // 
+            this.hintsAndTipsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showMinesToolStripMenuItem,
+            this.showPercentagesToolStripMenuItem,
+            this.showCellLocationsToolStripMenuItem});
+            this.hintsAndTipsToolStripMenuItem.Name = "hintsAndTipsToolStripMenuItem";
+            this.hintsAndTipsToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
+            this.hintsAndTipsToolStripMenuItem.Text = "Hints and Tips";
+            // 
+            // showMinesToolStripMenuItem
+            // 
+            this.showMinesToolStripMenuItem.Name = "showMinesToolStripMenuItem";
+            this.showMinesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showMinesToolStripMenuItem.Text = "Show Mines";
+            this.showMinesToolStripMenuItem.Click += new System.EventHandler(this.showMinesToolStripMenuItem_Click);
+            // 
+            // showPercentagesToolStripMenuItem
+            // 
+            this.showPercentagesToolStripMenuItem.Name = "showPercentagesToolStripMenuItem";
+            this.showPercentagesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showPercentagesToolStripMenuItem.Text = "Show Percentages %";
+            this.showPercentagesToolStripMenuItem.Click += new System.EventHandler(this.showPercentagesToolStripMenuItem_Click);
+            // 
+            // showCellLocationsToolStripMenuItem
+            // 
+            this.showCellLocationsToolStripMenuItem.Name = "showCellLocationsToolStripMenuItem";
+            this.showCellLocationsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showCellLocationsToolStripMenuItem.Text = "Show Cell Locations";
+            this.showCellLocationsToolStripMenuItem.Click += new System.EventHandler(this.showCellLocationsToolStripMenuItem_Click);
+            // 
             // Minesweeper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -143,6 +143,7 @@
             this.Text = "Minesweeper";
             this.Click += new System.EventHandler(this.Minesweeper_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Minesweeper_Paint);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Minesweeper_MouseMove);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

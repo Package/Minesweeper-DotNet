@@ -6,9 +6,10 @@ namespace Minesweeper.Core.Boards
     public class BoardPainter
     {
         public Board Board { get; set; }
+        public Cell HoveredCell { get; set; }
 
         private Dictionary<int, SolidBrush> _cellColours;
-        private readonly Font _textFont = new Font(FontFamily.GenericSansSerif, 16f);
+        private readonly Font _textFont = new Font("Verdana", 16f, FontStyle.Bold);
         private readonly Font _percentFont = new Font(FontFamily.GenericSansSerif, 7f);
         private readonly Font _locationFont = new Font(FontFamily.GenericSansSerif, 6f);
 
@@ -59,6 +60,48 @@ namespace Minesweeper.Core.Boards
         }
 
         /// <summary>
+        /// Gets the brush colour to paint the background of the cell with.
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        private Brush GetBackgroundBrush(Cell cell)
+        {
+            if (HoveredCell != null)
+            {
+                // The hovered cell itself:
+                if (HoveredCell.XLoc == cell.XLoc && HoveredCell.YLoc == cell.YLoc)
+                {
+                    return Brushes.LightSteelBlue;
+                }
+
+                // Is one of the neighbor cells:
+                //if (HoveredCell.GetNeighborCells().Contains(cell))
+                //{
+                //    return Brushes.LightSkyBlue;
+                //}
+
+                HoveredCell.UpdateConstraints();
+
+                // Is one of the constraints of this cell:
+                if (HoveredCell.Constraint.Constraints.Contains(cell))
+                {
+                    return Brushes.LightSkyBlue;
+                }
+            }
+
+            // No cell being hovered over so return either dark/light gray depending on 
+            // whether the cell is closed.
+            if (cell.Opened)
+                return Brushes.LightGray;
+            else if (cell.MinePercentage == 0M)
+                return Brushes.PaleGreen;
+            else if (cell.MinePercentage == 100M)
+                return Brushes.Salmon;
+
+            return Brushes.DarkGray;
+        }
+
+        /// <summary>
         /// Renders one cell on the game board.
         /// </summary>
         /// <param name="cell"></param>
@@ -68,27 +111,19 @@ namespace Minesweeper.Core.Boards
             // Closed Cell
             if (cell.Closed)
             {
-                graphics.FillRectangle(Brushes.DarkGray, cell.Bounds);
+                graphics.FillRectangle(GetBackgroundBrush(cell), cell.Bounds);
 
                 if (cell.MinePercentage != -1 && Board.ShowPercentage)
                 {
                     graphics.DrawString($"{cell.MinePercentage.ToString()}%", _percentFont, Brushes.DarkRed, cell.TopLeftPos);
-
-                    if (cell.MinePercentage == 0M)
-                    {
-                        graphics.FillRectangle(Brushes.PaleGreen, cell.Bounds);
-                    }
-                    if (cell.MinePercentage == 100M)
-                    {
-                        graphics.FillRectangle(Brushes.Salmon, cell.Bounds);
-                    }
                 }
             }
 
             // Opened Cell
             if (cell.Opened)
             {
-                graphics.FillRectangle(Brushes.LightGray, cell.Bounds);
+                graphics.FillRectangle(GetBackgroundBrush(cell), cell.Bounds);
+
                 if (cell.NumMines > 0)
                 {
                     graphics.DrawString(cell.NumMines.ToString(), _textFont, GetCellColour(cell), cell.CenterPos);
@@ -113,7 +148,12 @@ namespace Minesweeper.Core.Boards
                 // Reveal the locations of the mines that had not been flagged
                 if (!cell.Flagged)
                 {
-                    graphics.DrawString("M", _textFont, Brushes.DarkRed, cell.CenterPos);
+                    var format = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    graphics.DrawString("M", _textFont, Brushes.Black, cell.Bounds, format);
                 }
             }
 
