@@ -26,6 +26,7 @@ namespace Minesweeper.Core
         public Rectangle Bounds { get; private set; }
         private List<Cell> Surrounding { get; set; }
         public CellConstraint Constraint { get; private set; }
+
         /// <summary>
         /// Which cells around this cell have been flagged already?
         /// </summary>
@@ -93,6 +94,7 @@ namespace Minesweeper.Core
                 _ => throw new Exception($"Unknown cell type: {CellType}"),
             };
 
+            Board.Minesweeper.UpdateMinesRemaining();
             Board.Minesweeper.Invalidate();
         }
 

@@ -38,11 +38,22 @@ namespace Minesweeper
 
             // Dynamically resize the board to fit
             Width = (BOARD_WIDTH * Board.CellSize) + (int)(Board.CellSize * 1.5);
-            Height = (BOARD_HEIGHT * Board.CellSize) + Board.CellSize * 3;
+            Height = (BOARD_HEIGHT * Board.CellSize) + Board.CellSize * 4;
+
+            UpdateMinesRemaining();
 
             showMinesToolStripMenuItem.Checked = false;
             showCellLocationsToolStripMenuItem.Checked = false;
             showPercentagesToolStripMenuItem.Checked = false;
+        }
+
+        /// <summary>
+        /// Updates the number of mines remaining on the UI.
+        /// </summary>
+        /// <param name="numberOfMines"></param>
+        public void UpdateMinesRemaining()
+        {
+            lblMinesLeft.Text = $"Mines Left: {_board.NumMinesRemaining}";
         }
 
         /// <summary>
@@ -73,6 +84,12 @@ namespace Minesweeper
             }
         }
 
+        /// <summary>
+        /// Returns the cell that was clicked on. Or null if the click was outside of the bounds of the 
+        /// game board.
+        /// </summary>
+        /// <param name="mouseArgs"></param>
+        /// <returns></returns>
         private Cell GetCellFromMouseEvent(MouseEventArgs mouseArgs)
         {
             // Game is in an over state - do not register clicks on the board.
@@ -82,7 +99,7 @@ namespace Minesweeper
             }
 
             var clickedX = mouseArgs.X - (Board.CellSize / 2);
-            var clickedY = mouseArgs.Y - Board.CellSize;
+            var clickedY = mouseArgs.Y - (Board.CellSize * 2);
 
             var cellX = clickedX / Board.CellSize;
             var cellY = clickedY / Board.CellSize;

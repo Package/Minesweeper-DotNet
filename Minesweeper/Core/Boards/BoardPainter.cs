@@ -46,7 +46,7 @@ namespace Minesweeper.Core.Boards
         public void Paint(Graphics graphics)
         {
             graphics.Clear(Color.White);
-            graphics.TranslateTransform(Board.CellSize / 2, Board.CellSize);
+            graphics.TranslateTransform(Board.CellSize / 2, Board.CellSize * 2);
 
             for (int x = 0; x < Board.Width; x++)
             {
@@ -89,13 +89,16 @@ namespace Minesweeper.Core.Boards
                 }
             }
 
-            // No cell being hovered over so return either dark/light gray depending on 
-            // whether the cell is closed.
+            // No cell being hovered over so return the default background colouring following the below logic:
+            // Open Cell => Light Gray
+            // Closed Cell => Dark Gray
+            // 100% a mine => Salmon (red)
+            // 100% safe => Pale Green
             if (cell.Opened)
                 return Brushes.LightGray;
-            else if (cell.MinePercentage == 0M)
+            else if (cell.MinePercentage == 0M && Board.ShowPercentage)
                 return Brushes.PaleGreen;
-            else if (cell.MinePercentage == 100M)
+            else if (cell.MinePercentage == 100M && Board.ShowPercentage)
                 return Brushes.Salmon;
 
             return Brushes.DarkGray;

@@ -39,6 +39,7 @@
             this.showMinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showPercentagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCellLocationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblMinesLeft = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -131,12 +132,22 @@
             this.showCellLocationsToolStripMenuItem.Text = "Show Cell Locations";
             this.showCellLocationsToolStripMenuItem.Click += new System.EventHandler(this.showCellLocationsToolStripMenuItem_Click);
             // 
+            // lblMinesLeft
+            // 
+            this.lblMinesLeft.AutoSize = true;
+            this.lblMinesLeft.Location = new System.Drawing.Point(16, 38);
+            this.lblMinesLeft.Name = "lblMinesLeft";
+            this.lblMinesLeft.Size = new System.Drawing.Size(59, 13);
+            this.lblMinesLeft.TabIndex = 3;
+            this.lblMinesLeft.Text = "Mines Left:";
+            // 
             // Minesweeper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(792, 620);
+            this.Controls.Add(this.lblMinesLeft);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Minesweeper";
@@ -163,6 +174,7 @@
         private System.Windows.Forms.ToolStripMenuItem beginnerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem intermediateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
+        private System.Windows.Forms.Label lblMinesLeft;
     }
 }
 
