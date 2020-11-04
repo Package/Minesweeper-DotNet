@@ -239,6 +239,12 @@ namespace Minesweeper.Core
             MinePercentage = Math.Round(percent / (checkedCells > 0 ? checkedCells : 1));
         }
 
+        public decimal MinePercentageFromConstraints()
+        {
+            var percent = 0M;
+            return percent;
+        }
+
         /// <summary>
         /// Updates this cells constraints.
         /// </summary>
@@ -260,6 +266,8 @@ namespace Minesweeper.Core
                 // Opened/already flagged/already resolved are of no use:
                 if (cell.Closed && !cell.Flagged)
                 {
+                    cell.Constraint.WhatIConstrain.Add(this);
+
                     Constraint.Constraints.Add(cell);
                 }
             }

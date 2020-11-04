@@ -198,6 +198,20 @@ namespace Minesweeper
         }
 
         /// <summary>
+        /// Reveals (or hides) the computers tips of which cells are safe/mines.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showHintsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _board.ShowHints = !_board.ShowHints;
+            _board.UpdateCells();
+            showHintsToolStripMenuItem.Checked = _board.ShowHints;
+
+            Invalidate();
+        }
+
+        /// <summary>
         /// Reveals (or hides) the percentages of each cell being a mine.
         /// </summary>
         /// <param name="sender"></param>

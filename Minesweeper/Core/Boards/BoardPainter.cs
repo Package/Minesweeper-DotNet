@@ -96,9 +96,9 @@ namespace Minesweeper.Core.Boards
             // 100% safe => Pale Green
             if (cell.Opened)
                 return Brushes.LightGray;
-            else if (cell.MinePercentage == 0M && Board.ShowPercentage)
+            else if (cell.MinePercentage == 0M && Board.ShowHints)
                 return Brushes.PaleGreen;
-            else if (cell.MinePercentage == 100M && Board.ShowPercentage)
+            else if (cell.MinePercentage == 100M && Board.ShowHints)
                 return Brushes.Salmon;
 
             return Brushes.DarkGray;

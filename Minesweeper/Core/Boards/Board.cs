@@ -14,6 +14,7 @@ namespace Minesweeper.Core.Boards
         public int NumMinesRemaining => NumMines - FlagsPlaced();
         public Cell[,] Cells { get; set; }
         public bool ShowMines { get; set; }
+        public bool ShowHints { get; set; }
         public bool ShowPercentage { get; set; }
         public bool ShowLocation { get; set; }
         public bool GameOver { get; set; }
@@ -176,6 +177,14 @@ namespace Minesweeper.Core.Boards
         /// </summary>
         public void UpdateCells()
         {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    Cells[x, y].Constraint.WhatIConstrain.Clear();
+                }
+            }
+
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)

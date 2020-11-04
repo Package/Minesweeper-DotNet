@@ -10,6 +10,7 @@ namespace Minesweeper.Core.Cells
     {
         public Cell Cell { get; set; }
         public HashSet<Cell> Constraints { get; set; } = new HashSet<Cell>();
+        public HashSet<Cell> WhatIConstrain { get; set; } = new HashSet<Cell>();
         public int NumMines { get; set; }
     }
 }

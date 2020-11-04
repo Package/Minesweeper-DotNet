@@ -40,6 +40,7 @@
             this.showPercentagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCellLocationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblMinesLeft = new System.Windows.Forms.Label();
+            this.showHintsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,6 +106,7 @@
             // 
             this.hintsAndTipsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showMinesToolStripMenuItem,
+            this.showHintsToolStripMenuItem,
             this.showPercentagesToolStripMenuItem,
             this.showCellLocationsToolStripMenuItem});
             this.hintsAndTipsToolStripMenuItem.Name = "hintsAndTipsToolStripMenuItem";
@@ -141,6 +143,13 @@
             this.lblMinesLeft.TabIndex = 3;
             this.lblMinesLeft.Text = "Mines Left:";
             // 
+            // showHintsToolStripMenuItem
+            // 
+            this.showHintsToolStripMenuItem.Name = "showHintsToolStripMenuItem";
+            this.showHintsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.showHintsToolStripMenuItem.Text = "Show Hints";
+            this.showHintsToolStripMenuItem.Click += new System.EventHandler(this.showHintsToolStripMenuItem_Click);
+            // 
             // Minesweeper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,6 +184,7 @@
         private System.Windows.Forms.ToolStripMenuItem intermediateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
         private System.Windows.Forms.Label lblMinesLeft;
+        private System.Windows.Forms.ToolStripMenuItem showHintsToolStripMenuItem;
     }
 }
 
