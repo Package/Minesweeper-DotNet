@@ -149,6 +149,7 @@ namespace Minesweeper.Core.Boards
         {
             var correctMines = 0;
             var incorrectMines = 0;
+            var remainingCells = 0;
 
             for (var x = 0; x < Width; x++)
             {
@@ -157,16 +158,23 @@ namespace Minesweeper.Core.Boards
                     var c = Cells[x, y];
                     if (c.CellType == CellType.Flagged)
                     {
-                        incorrectMines += 1;
+                        incorrectMines++;
                     }
                     if (c.CellType == CellType.FlaggedMine)
                     {
-                        correctMines += 1;
+                        correctMines++;
+                    }
+
+                    if (c.Closed)
+                    {
+                        remainingCells++;
                     }
                 }
             }
 
-            if (correctMines == NumMines && incorrectMines == 0)
+            bool flaggedAllMines = correctMines == NumMines && incorrectMines == 0;
+            bool onlyCellsLeftAreMines = remainingCells == NumMines;
+            if (flaggedAllMines || onlyCellsLeftAreMines)
             {
                 HandleGameOver(gameWon: true);
             }
