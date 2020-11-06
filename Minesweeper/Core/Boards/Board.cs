@@ -17,6 +17,7 @@ namespace Minesweeper.Core.Boards
         public bool ShowHints { get; set; }
         public bool ShowPercentage { get; set; }
         public bool ShowLocation { get; set; }
+        public bool ShowCellHighlights { get; set; }
         public bool GameOver { get; set; }
 
         public const int CellSize = 32;

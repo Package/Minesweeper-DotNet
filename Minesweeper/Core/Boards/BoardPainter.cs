@@ -66,7 +66,7 @@ namespace Minesweeper.Core.Boards
         /// <returns></returns>
         private Brush GetBackgroundBrush(Cell cell)
         {
-            if (HoveredCell != null)
+            if (HoveredCell != null && Board.ShowCellHighlights)
             {
                 // The hovered cell itself:
                 if (HoveredCell.XLoc == cell.XLoc && HoveredCell.YLoc == cell.YLoc)
@@ -75,18 +75,17 @@ namespace Minesweeper.Core.Boards
                 }
 
                 // Is one of the neighbor cells:
-                //if (HoveredCell.GetNeighborCells().Contains(cell))
-                //{
-                //    return Brushes.LightSkyBlue;
-                //}
-
-                HoveredCell.UpdateConstraints();
-
-                // Is one of the constraints of this cell:
-                if (HoveredCell.Constraint.Constraints.Contains(cell))
+                if (HoveredCell.GetNeighborCells().Contains(cell))
                 {
                     return Brushes.LightSkyBlue;
                 }
+
+                //// Is one of the constraints of this cell:
+                //HoveredCell.UpdateConstraints();
+                //if (HoveredCell.Constraint.Constraints.Contains(cell))
+                //{
+                //    return Brushes.LightSkyBlue;
+                //}
             }
 
             // No cell being hovered over so return the default background colouring following the below logic:

@@ -239,6 +239,19 @@ namespace Minesweeper
         }
 
         /// <summary>
+        /// Toggles whether to highlight the cells surrounding.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showCellHighlightsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _board.ShowCellHighlights = !_board.ShowCellHighlights;
+            showCellHighlightsToolStripMenuItem.Checked = _board.ShowCellHighlights;
+
+            Invalidate();
+        }
+
+        /// <summary>
         /// Starts a new beginner game.
         /// </summary>
         /// <param name="sender"></param>
